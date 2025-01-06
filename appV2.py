@@ -260,7 +260,7 @@ try:
                 )
             
             if response:
-                response_content = response.get('response', 'Sorry, I could not process your request.')
+                response_content = response["outputs"][0]["outputs"][0]["results"]["message"]["text"]
                 st.session_state.messages.append({"role": "assistant", "content": response_content})
                 with st.chat_message("assistant"):
                     st.markdown(response_content)
