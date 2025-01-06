@@ -108,17 +108,17 @@ if st.sidebar.button("Refresh Data"):
 # Generate sample data if needed
 # def generate_sample_data():
 #     dates = pd.date_range(start='2024-01-01', end='2024-01-31', freq='D')
-#     post_types = ['Carousel', 'Reel', 'Static']
+#     Post_Types = ['Carousel', 'Reel', 'Static']
     
 #     data = []
 #     for date in dates:
-#         for post_type in post_types:
+#         for Post_Type in Post_Types:
 #             data.append({
 #                 'date': date,
-#                 'post_type': post_type,
-#                 'likes': random.randint(100, 1000),
-#                 'comments': random.randint(10, 100),
-#                 'shares': random.randint(5, 50),
+#                 'Post_Type': Post_Type,
+#                 'Likes': random.randint(100, 1000),
+#                 'Comments': random.randint(10, 100),
+#                 'Shares': random.randint(5, 50),
 #                 'engagement_rate': random.uniform(1.0, 5.0)
 #             })
     
@@ -157,9 +157,9 @@ if page == "Dashboard":
     with col1:
         st.metric("Total Posts", len(df))
     with col2:
-        st.metric("Avg. Likes", int(df['likes'].mean()))
+        st.metric("Avg. Likes", int(df['Likes'].mean()))
     with col3:
-        st.metric("Avg. Comments", int(df['comments'].mean()))
+        st.metric("Avg. Comments", int(df['Comments'].mean()))
     with col4:
         st.metric("Avg. Engagement Rate", f"{df['engagement_rate'].mean():.2f}%")
     
