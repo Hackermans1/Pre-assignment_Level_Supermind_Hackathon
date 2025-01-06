@@ -96,10 +96,10 @@ def run_flow(message, tweaks):
     except requests.exceptions.RequestException as e:
         logger.error(f"API Error: {str(e)}")
         return {"response": "Sorry, there was an error connecting to the API."}
+
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
-        return {"response": "An unexpected error occurred. Please try again."}
-
+        return {"response": "An unexpected error occurred. Please try again."}   
 
 def load_lottie_file(filepath: str):
     try:
@@ -111,11 +111,12 @@ def load_lottie_file(filepath: str):
 
 
 # Load the CSV file
-@st.cache_data(ttl=3600)  # Cache data for 1 hour
+# Cache data for 1 hour
 def load_data():
     try:
         df = pd.read_csv('data/sme.csv')
         df['Post_Date'] = pd.to_datetime(df['Post_Date'])
+        df['Engagement_Rate'] = ((df['Likes'] + df['Comments'] + df['Shares']) / df.groupby('Post_Type')['Likes'].transform('mean') * 100)
         return df
     except FileNotFoundError:
         logger.error("sme.csv file not found")
@@ -149,15 +150,31 @@ try:
         # Key Metrics Row
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
-            st.metric("Total Posts", len(filtered_df))
+            st.metric(
+                "Total Posts",
+                len(filtered_df),
+                delta=f"{len(df) - len(filtered_df)} from previous period",
+            )
         with col2:
-            st.metric("Avg Likes", f"{filtered_df['Likes'].mean():,.0f}")
-        with col3:
-            st.metric("Avg Comments", f"{filtered_df['Comments'].mean():,.0f}")
+            total_engagement = filtered_df['Likes'].sum() + filtered_df['Comments'].sum() + filtered_df['Shares'].sum()
+            st.metric(
+                "Total Engagement",
+                f"{total_engagement:,}",
+                delta=f"{filtered_df['Engagement_Rate'].mean():.1f}% avg rate"
+            )
+        
+        with col3:  
+            best_post = filtered_df.loc[filtered_df['Engagement_Rate'].idxmax()]
+            st.metric(
+                "Best Performing Post",
+                f"Post {best_post['Post_ID']}",
+                delta=f"{best_post['Engagement_Rate']:.1f}% engagement"
+            )
         with col4:
-            st.metric("Avg Shares", f"{filtered_df['Shares'].mean():,.0f}")
+            st.metric("Avg Comments", f"{filtered_df['Comments'].mean():,.0f}", delta=f"{filtered_df['Comments'].std():,.0f} std")
+        
         with col5:
-            st.metric("Avg Views", f"{filtered_df['Views'].mean():,.0f}")
+            st.metric("Avg Views", f"{filtered_df['Views'].mean():,.0f}", delta=f"{filtered_df['Views'].std():,.0f} std")
 
         # Engagement by Post Type
         st.subheader("Engagement by Post Type")
