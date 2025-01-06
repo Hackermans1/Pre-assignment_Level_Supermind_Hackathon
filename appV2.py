@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 import logging
+import json
+from streamlit_lottie import st_lottie
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -97,6 +99,15 @@ def run_flow(message, tweaks):
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
         return {"response": "An unexpected error occurred. Please try again."}
+
+
+def load_lottie_file(filepath: str):
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error(f"Error loading Lottie file: {str(e)}")
+        return None
 
 
 # Load the CSV file
@@ -246,6 +257,58 @@ try:
 
     elif page == "Chat with Data":
         st.title("Chat with Your Data")
+
+
+        # Add custom CSS for Lottie container
+        st.markdown("""
+            <style>
+            /* Remove default backgrounds */
+            .lottie-container {
+                background: transparent !important;
+                margin: 0 auto;
+                padding: 0;
+            }
+            
+            [data-testid="column"] {
+                background: transparent !important;
+                padding: 0 !important;
+            }
+            
+            /* Center the animation */
+            div[data-testid="stVerticalBlock"] > div {
+                display: flex;
+                justify-content: center;
+                background: transparent !important;
+            }
+            
+            /* Remove any iframe backgrounds */
+            iframe {
+                background: transparent !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        
+        # Create a single full-width column for the Lottie
+        with st.container():
+            try:
+                lottie_animation = load_lottie_file("Animation - 1736158167474/animations/135d0b69-1487-46fb-93eb-0a75c030874b.json")
+                if lottie_animation:
+                    st_lottie(
+                        lottie_animation,
+                        speed=1,
+                        reverse=False,
+                        loop=True,
+                        quality="high",
+                        height=400,  
+                        width=400,  
+                        key="lottie-robot",
+                    )
+            except Exception as e:
+                logger.error(f"Error displaying Lottie animation: {str(e)}")
+        
+        # Add some spacing after the animation
+        st.markdown("<div style='margin-bottom: 1rem;'></div>", unsafe_allow_html=True)
+
         
         # Initialize chat history
         if "messages" not in st.session_state:
