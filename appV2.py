@@ -12,27 +12,48 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+st.set_page_config(
+    page_title="Social Media Analytics Dashboard",
+    page_icon="📊",
+    layout="wide"
+)
+st.markdown("""
+    <style>
+    backgroundColor="#222222"
+
+    .metric-card {
+        background: ##222222;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    .stMetric {
+        background-color: ##ffffff;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    .chart-container {
+        background: ##222222;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Load environment variables
 load_dotenv()
 
 # Get API credentials from environment variables with default values
 BASE_API_URL = "https://api.langflow.astra.datastax.com"
-LANGFLOW_ID = "486732ff-a748-4b68-a48b-e617028e9db9"
-FLOW_ID = "d343821e-7751-4215-8afd-11f1071fd651"
+LANGFLOW_ID="486732ff-a748-4b68-a48b-e617028e9db9"
+FLOW_ID="d343821e-7751-4215-8afd-11f1071fd651"
 APPLICATION_TOKEN = os.getenv("APPLICATION_TOKEN")
 ENDPOINT = FLOW_ID
 
+# 
 def run_flow(message, tweaks):
-    """
-    Run the langflow pipeline with the given message and tweaks.
-    
-    Args:
-        message (str): The user's input message
-        tweaks (dict): Configuration parameters for the flow
-        
-    Returns:
-        dict: The response from the API
-    """
     try:
         if not APPLICATION_TOKEN:
             raise ValueError("APPLICATION_TOKEN is not set in environment variables")
@@ -77,19 +98,17 @@ def run_flow(message, tweaks):
         logger.error(f"Unexpected error: {str(e)}")
         return {"response": "An unexpected error occurred. Please try again."}
 
-# Setup page config
-st.set_page_config(page_title="Social Media Analytics Dashboard", layout="wide")
 
 # Load the CSV file
 @st.cache_data(ttl=3600)  # Cache data for 1 hour
 def load_data():
     try:
-        df = pd.read_csv('jk.csv')
+        df = pd.read_csv('data/sme.csv')
         df['Post_Date'] = pd.to_datetime(df['Post_Date'])
         return df
     except FileNotFoundError:
-        logger.error("jk.csv file not found")
-        raise FileNotFoundError("Data file 'jk.csv' not found. Please ensure it exists in the current directory.")
+        logger.error("sme.csv file not found")
+        raise FileNotFoundError("Data file 'sme.csv' not found. Please ensure it exists in the current directory.")
     except Exception as e:
         logger.error(f"Error loading data: {str(e)}")
         raise Exception(f"Error loading data: {str(e)}")
@@ -159,7 +178,7 @@ try:
         metrics = st.multiselect(
             "Select Metrics to Display",
             ['Likes', 'Comments', 'Shares', 'Views'],
-            default=['Likes']
+            default=['Likes','Views']
         )
         
         fig = go.Figure()
@@ -267,15 +286,91 @@ try:
 
 except Exception as e:
     st.error(f"Error loading or processing data: {str(e)}")
-    st.info("Please ensure your data file 'jk.csv' exists and is properly formatted.")
+    st.info("Please ensure your data file 'sme.csv' exists and is properly formatted.")
 
-# Add CSS for styling
+
+# Add CSS for enhanced styling
 st.markdown("""
     <style>
+    /* Background color for the app */
+    .stApp {
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background-color: #2e2e2e;
+        color: #ffffff;
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    /* Headings and titles */
+    h1, h2, h3 {
+        color: #f0f0f0;
+    }
+
+    /* Metric styling */
     .stMetric {
-        background-color: #f0f2f6;
+        background-color: #2b2b2b;
+        color: #e0e0e0;
         padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Plotly chart container styling */
+    .stPlotlyChart {
+        background-color: #2e2e2e;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* Chat input and messages */
+    .stChatInput, .stChatMessage {
+        background-color: #2b2b2b;
+        color: #ffffff;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        box-shadow: 0px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    /* Button styling */
+    button {
+        background-color: #ff6f61;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #ff5044;
+    }
+
+    /* Sidebar elements styling */
+    [data-testid="stSidebar"] h2 {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    /* Date selector styling */
+    .stDateInput {
+        background-color: #2b2b2b;
+        color: #ffffff;
+        border: 1px solid #3e3e3e;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    /* Table styling */
+    .stTable {
+        background-color: #2e2e2e;
+        color: #ffffff;
         border-radius: 5px;
     }
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
