@@ -2,7 +2,8 @@
 
 This document explains the LangFlow pipeline design for processing social media engagement data and generating meaningful chat outputs based on user input. Each component of the pipeline is described below, along with its connections to other components to illustrate the flow of data.
 
-![image](https://github.com/user-attachments/assets/b781d44b-7c35-4852-b1ca-f66fa6eb5fba)
+![Uploading image.png…]()
+
 
 ---
 
