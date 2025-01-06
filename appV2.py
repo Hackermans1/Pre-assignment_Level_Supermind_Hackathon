@@ -256,7 +256,7 @@ try:
         st.plotly_chart(fig, use_container_width=True)
 
     elif page == "Chat with Data":
-        st.title("Chat with Your Data")
+        st.title(" PostInsights AI  🔍📸")
 
 
         # Add custom CSS for Lottie container
@@ -291,7 +291,7 @@ try:
         # Create a single full-width column for the Lottie
         with st.container():
             try:
-                lottie_animation = load_lottie_file("Animation - 1736158167474/animations/135d0b69-1487-46fb-93eb-0a75c030874b.json")
+                lottie_animation = load_lottie_file(r"Animation - 1736158167474\animations\135d0b69-1487-46fb-93eb-0a75c030874b.json")
                 if lottie_animation:
                     st_lottie(
                         lottie_animation,
@@ -299,8 +299,8 @@ try:
                         reverse=False,
                         loop=True,
                         quality="high",
-                        height=400,  
-                        width=400,  
+                        height=500,
+                    
                         key="lottie-robot",
                     )
             except Exception as e:
