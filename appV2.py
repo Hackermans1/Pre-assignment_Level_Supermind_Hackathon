@@ -58,6 +58,7 @@ def run_flow(message, tweaks):
             json=payload,
             timeout=30  # Add timeout
         )
+        print(response)
         
         if response.status_code == 500:
             logger.error("Internal server error from API")
