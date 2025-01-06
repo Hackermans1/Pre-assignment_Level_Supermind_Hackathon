@@ -15,8 +15,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 st.set_page_config(
-    page_title="Social Media Analytics Dashboard",
-    page_icon="📊",
+    page_title="PostVibes Analyzer",
+    page_icon="💥",
     layout="wide"
 )
 st.markdown("""
@@ -130,7 +130,7 @@ try:
     
     # Sidebar navigation
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Dashboard", "Detailed Analysis", "Chat with Data"])
+    page = st.sidebar.radio("Go to", ["Dashboard", "Detailed Analysis📊", "Chat with Data🔍"])
 
     # Date range selector in sidebar
     st.sidebar.title("Date Range")
@@ -181,7 +181,7 @@ try:
         col1, col2 = st.columns(2)
         
         with col1:
-            metric = st.selectbox("Select Metric", ['Likes', 'Comments', 'Shares', 'Views'])
+            metric = st.selectbox("Select Metric", ['Likes', 'Comments', 'Shares', 'Views'] )
             fig = px.bar(
                 filtered_df.groupby('Post_Type')[metric].mean().reset_index(),
                 x='Post_Type',
@@ -192,6 +192,14 @@ try:
             st.plotly_chart(fig, use_container_width=True)
         
         with col2:
+            #create a better alignment
+            st.write(" ")
+            st.write(" ")
+            st.write(" ")
+            st.write(" ")
+            st.write(" ")
+
+
             # Post Type Distribution
             fig = px.pie(
                 filtered_df,
@@ -221,7 +229,7 @@ try:
         fig.update_layout(title="Daily Engagement Metrics")
         st.plotly_chart(fig, use_container_width=True)
 
-    elif page == "Detailed Analysis":
+    elif page == "Detailed Analysis📊":
         st.title("Detailed Analysis")
         
         # Correlation Analysis
@@ -272,8 +280,8 @@ try:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    elif page == "Chat with Data":
-        st.title(" PostInsights AI  🔍📸")
+    elif page == "Chat with Data🔍":
+        st.title(" Chat With Your Social Media Data ")
 
 
         # Add custom CSS for Lottie container
@@ -308,7 +316,7 @@ try:
         # Create a single full-width column for the Lottie
         with st.container():
             try:
-                lottie_animation = load_lottie_file(r"Animation - 1736158167474\animations\135d0b69-1487-46fb-93eb-0a75c030874b.json")
+                lottie_animation = load_lottie_file(r"anim/animations/robo.json")
                 if lottie_animation:
                     st_lottie(
                         lottie_animation,
